@@ -3,10 +3,16 @@ title Multi-Tool Reseaux et Telecommunications
 
 :menu
 cls
+:::    _|_|_|      _|    _|_|_|_|_|      _|  _|_|_|_|_|    _|_|      _|_|    _|       
+:::    _|    _|  _|  _|      _|        _|        _|      _|    _|  _|    _|  _|       
+:::    _|_|_|      _|_|  _|  _|      _|          _|      _|    _|  _|    _|  _|       
+:::    _|    _|  _|    _|    _|    _|            _|      _|    _|  _|    _|  _|       
+:::    _|    _|    _|_|  _|  _|  _|              _|        _|_|      _|_|    _|_|_|_| 
+
+for /f "delims=: tokens=*" %%A in ('findstr /b ::: "%~f0"') do powershell -command "& {Write-Host '%%A' -ForegroundColor Red}"
+
 echo ================================
-echo Multi-Tool Reseaux et Telecommunications
-echo ================================
-echo 1. Calculer le masque de sous-reseau
+echo 1. Calculer le masque de sous-Reseaux
 echo 2. Afficher le tableau de la transformee de Fourier
 echo 3. Tracer un signal
 echo 4. Tracer la transformee de Fourier
