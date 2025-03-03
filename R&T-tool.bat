@@ -12,46 +12,42 @@ cls
 for /f "delims=: tokens=*" %%A in ('findstr /b ::: "%~f0"') do powershell -command "& {Write-Host '%%A' -ForegroundColor Red}"
 
 echo ================================
-echo 1. Calculer le masque de sous-Reseaux
+echo 1. Calculer le nombre d'hôtes ou le masque de sous-réseau
 echo 2. Afficher le tableau de la transformee de Fourier
 echo 3. Tracer un signal
 echo 4. Tracer la transformee de Fourier
-echo 5. Quitter
+echo 5. Analyser un fichier audio
+echo 6. Quitter
 echo ================================
-set /p choice=Choisissez une option (1-5):
+set /p choice=Choisissez une option (1-6):
 
 if %choice%==1 goto subnet_calculator
 if %choice%==2 goto fourier_transform
 if %choice%==3 goto plot_signal
 if %choice%==4 goto plot_fourier_transform
-if %choice%==5 goto end
+if %choice%==5 goto Fichier-audio
+if %choice%==6 goto end
 
 :subnet_calculator
 cls
-set /p ip=Entrez l'adresse IP:
-set /p mask=Entrez le masque de sous-reseau (ex: 255.255.255.0):
+echo Choisissez une option :
+echo 1. Calculer le nombre d'hôtes
+echo 2. Calculer le masque de sous-réseau
+echo 3. Afficher toutes les informations
+set /p subnet_choice=Choisissez une option (1-3):
 
-REM Calcul du sous-reseau
-for /f "tokens=1-4 delims=." %%a in ("%ip%") do (
-    set octet1=%%a
-    set octet2=%%b
-    set octet3=%%c
-    set octet4=%%d
+if %subnet_choice%==1 (
+    set /p cidr=Entrez la notation CIDR (ex: /24):
+    python subnet_calculator.py hosts %cidr%
+) else if %subnet_choice%==2 (
+    set /p cidr=Entrez la notation CIDR (ex: /24):
+    python subnet_calculator.py mask %cidr%
+) else if %subnet_choice%==3 (
+    set /p cidr=Entrez la notation CIDR (ex: /24):
+    python subnet_calculator.py all %cidr%
+) else (
+    echo Option invalide.
 )
-
-for /f "tokens=1-4 delims=." %%a in ("%mask%") do (
-    set mask1=%%a
-    set mask2=%%b
-    set mask3=%%c
-    set mask4=%%d
-)
-
-set /a subnet1=octet1 & mask1
-set /a subnet2=octet2 & mask2
-set /a subnet3=octet3 & mask3
-set /a subnet4=octet4 & mask4
-
-echo Le sous-reseau est: %subnet1%.%subnet2%.%subnet3%.%subnet4%
 pause
 goto menu
 
@@ -73,6 +69,13 @@ goto menu
 cls
 set /p expression=Entrez l'expression du signal (ex: 5*cos(2*np.pi*1000*t)):
 python TFT.py "%expression%"
+pause
+goto menu
+
+:Fichier-audio
+cls
+set /p audio_filename=Entrez le nom du fichier audio :
+python Fichier-audio.py "%audio_filename%"
 pause
 goto menu
 
